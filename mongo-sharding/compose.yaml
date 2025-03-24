@@ -100,6 +100,23 @@ services:
       test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
       interval: 5s
       start_period: 10s
+    
+  app:
+    build:
+      context: ./api_app
+      dockerfile: Dockerfile
+    container_name: app
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      MONGODB_URL: "mongodb://mongos_router:27020"
+      MONGODB_DATABASE_NAME: "somedb"
+    depends_on:
+      - mongos_router
+    networks:
+      app-network:
+        ipv4_address: 173.17.0.15
 
 networks:
   app-network:
